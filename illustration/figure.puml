@@ -10,13 +10,13 @@ top to bottom direction
 
 (Download HMDA Data) --> (Move & Unzip HMDA Data)
 (Move & Unzip HMDA Data) --> (Subset HMDA Data to State)
-(Subset HMDA Data to State) --> (Merge Census & HMDA)
+(Subset HMDA Data to State) --> (Merge Panel & LAR\n by: lei and year)
+(Merge Panel & LAR\n by: lei and year) --> (Merge Census & HMDA)
 
 (Download Zillow Data for State) --> (Move & Unzip Zillow Data)
-(Move & Unzip Zillow Data) ---> (Merge Zillow Asmt & Trans)
-(Merge Zillow Asmt & Trans) --> (Merge Zillow with HMDA & Census Crosswalk)
+(Move & Unzip Zillow Data) ---> (Merge Zillow Asmt & Trans\n\n by: propertyfullstreetaddress, propertycity,\npropertyzip, propertyunitnumber, year)
+(Merge Zillow Asmt & Trans\n\n by: propertyfullstreetaddress, propertycity,\npropertyzip, propertyunitnumber, year) --> (Merge Zillow with HMDA & Census Crosswalk)
 (Merge Census & HMDA) --> (Merge Zillow with HMDA & Census Crosswalk)
 (Merge Zillow with HMDA & Census Crosswalk) --> (Export Data)
 
 @enduml
-
