@@ -1,0 +1,69 @@
+@startuml "data flow"
+
+top to bottom direction
+
+rectangle "Zillow & HMDA Merge" {
+
+rectangle "Census & HMDA Merge" {
+
+rectangle "Census Procedure" {
+(Download 1990 - 2000 State Census Tract Data) as d_census_1990_2000
+(Download 2000 - 2010 State Census Tract Data) as d_census_2000_2010
+(Download 2010 - 2020 State Census Tract Data) as d_census_2010_2020
+
+(Move & Unzip 1990 - 2000 State Census Tract Data) as mu_census_1990_2000
+(Move & Unzip 2000 - 2010 State Census Tract Data) as mu_census_2000_2010
+(Move & Unzip 2010 - 2020 State Census Tract Data) as mu_census_2010_2020
+
+(Create Census Tract Crosswalk) as c_census
+
+d_census_1990_2000 --> mu_census_1990_2000
+d_census_2000_2010 --> mu_census_2000_2010
+d_census_2010_2020 --> mu_census_2010_2020
+mu_census_1990_2000 --> c_census
+mu_census_2000_2010 --> c_census
+mu_census_2010_2020 --> c_census
+}
+
+rectangle "HMDA Procedure" {
+(Download HMDA LAR) as d_hmda_lar
+(Move & Unzip LAR) as mu_lar
+(Subset LAR for Actualized Loans\n\nby: action_taken) as z_hmda_lar
+(Subset LAR to State\n\nby: census_tract) as s_hmda_lar
+
+(Download HMDA Panel) as d_hmda_panel
+(Move & Unzip Panel) as mu_panel
+
+(Merge Panel & LAR\n\nby: lei and activity_year) as m_panel_lar
+
+d_hmda_lar --> mu_lar
+mu_lar --> z_hmda_lar
+z_hmda_lar --> s_hmda_lar
+d_hmda_panel --> mu_panel
+mu_panel ----> m_panel_lar
+s_hmda_lar --> m_panel_lar
+}
+
+
+(Merge Census Tract Crosswalk & HMDA 1994 - 2013\n\nby: census_tract) as m_hmda_census
+m_panel_lar ---> m_hmda_census
+c_census --> m_hmda_census
+}
+
+rectangle "Zillow Procedure" {
+(Download Zillow Data for State) as d_zillow
+(Move & Unzip Zillow State Transaction Data) as mt_zillow
+(Move & Unzip Zillow State Assessment Data) as ma_zillow
+(Merge Zillow Assessment & Transaction Data\n\n by: propertyfullstreetaddress, propertycity,\npropertyzip, propertyunitnumber, year) as m_zillow
+d_zillow --> mt_zillow
+d_zillow --> ma_zillow
+mt_zillow --> m_zillow
+ma_zillow --> m_zillow
+}
+(Merge Zillow with HMDA\n\nby: census_tract, activity_year, lendername, loanamount) as m_zillow_hmda
+
+m_zillow --> m_zillow_hmda
+m_hmda_census --> m_zillow_hmda
+
+}
+@enduml
