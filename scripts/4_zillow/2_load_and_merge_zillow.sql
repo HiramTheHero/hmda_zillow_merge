@@ -14,7 +14,7 @@ select distinct on (rowid) * from asmt_main;
 create or replace table asmt_value as 
 select 
 trim(column00) as rowid,
-try_cast(trim(column03) as int) as totalassessedvalue,
+try_cast(trim(column03) as double) as totalassessedvalue,
 try_cast(trim(column04) as int) as assessmentyear
 from 
 read_csv_auto('data/MA/zillow_data/data_files/Asmt_Value.csv');
