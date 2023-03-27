@@ -10,7 +10,7 @@ activity_year,
 create or replace table panel_1994_2003 as
 select 
 array_slice(line, 1, 10) as lei_or_respondent_id,
-trim(array_slice(line, 18, 47)) as lender_name,
+upper(trim(array_slice(line, 18, 47))) as lendername,
 array_slice(line, 155, 158) as activity_year,
 try_cast(array_slice(line, 77, 86) as int) as assets,
 from
@@ -33,7 +33,7 @@ select distinct on (lei_or_respondent_id, activity_year) * from panel_1994_2003;
 create or replace table panel_2004_2013 as
 select
 array_slice(line, 1, 10) as lei_or_respondent_id,
-trim(array_slice(line, 19, 48)) as lender_name,
+upper(trim(array_slice(line, 19, 48))) as lendername,
 try_cast(array_slice(line, 156, 159) as int) as activity_year,
 try_cast(array_slice(line, 78, 87) as int) as assets,
 from
@@ -56,7 +56,7 @@ select distinct on (lei_or_respondent_id, activity_year) * from panel_2004_2013;
 create or replace table panel_2014_2016 as
 select 
 array_slice(line,5, 14) as lei_or_respondent_id,
-trim(array_slice(line,96, 125)) as lender_name,
+upper(trim(array_slice(line,96, 125))) as lendername,
 try_cast(array_slice(line,1, 4) as int) as activity_year,
 try_cast(array_slice(line,85, 94) as int) as assets,
 from
@@ -72,7 +72,7 @@ select distinct on (lei_or_respondent_id, activity_year) * from panel_2014_2016;
 create or replace table panel_2017 as
 select
 column01 as lei_or_respondent_id,
-upper(trim(column10)) as lender_name,
+upper(trim(column10)) as lendername,
 column00 as activity_year,
 column08 as assets,
 from 'data/hmda_data/panel_data/panel_2017.csv';
@@ -84,7 +84,7 @@ create or replace table panel_2018_2020 as
 select
 activity_year,
 lei as lei_or_respondent_id,
-upper(trim(respondent_name)) as lender_name,
+upper(trim(respondent_name)) as lendername,
 assets,
 from read_csv_auto([
   'data/hmda_data/panel_data/panel_2018.csv',
@@ -94,6 +94,7 @@ union all
 select
 activity_year,
 lei as lei_or_respondent_id,
-upper(trim(respondent_name)) as lender_name,
+upper(trim(respondent_name)) as lendername,
 assets,
 from 'data/hmda_data/panel_data/panel_2020.csv';
+

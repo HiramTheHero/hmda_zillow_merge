@@ -17,25 +17,13 @@ from 'data/MA/census_tract_data/data_files/2000_2010.csv';
 create or replace table census_data_2000_2010 as
 select distinct on (census_code_2000, census_code_2010) * from census_data_2000_2010;
 
-create or replace table census_data_2010_2020 as
-select
-STATE_2010 || COUNTY_2010 || TRACT_2010 as census_code_2010,
-STATE_2020 || COUNTY_2020 || TRACT_2020 as census_code_2020
-from 'data/MA/census_tract_data/data_files/2010_2020.csv';
-
-create or replace table census_data_2010_2020 as
-select distinct on (census_code_2010, census_code_2020) * from census_data_2010_2020;
-
-create or replace table census_crosswalk_1990_2020 as
+create or replace table census_crosswalk_1990_2010 as
 select
 *
 from
 census_data_1990_2000
 join
-(select
-*
-from census_data_2000_2010
-join census_data_2010_2020 using (census_code_2010))
-using (census_code_2000);
+census_data_2000_2010 using (census_code_2000);
 
-
+drop table census_data_1990_2000;
+drop table census_data_2000_2010;
